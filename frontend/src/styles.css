@@ -1,0 +1,29 @@
+.container {
+    text-align: center;
+}
+
+.grid {
+    display: grid;
+    gap: 5px;
+    margin: 20px auto;
+    width: fit-content;
+}
+
+.cell {
+    width: 60px;
+    height: 60px;
+    background: gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.agent {
+    background: blue;
+    color: white;
+}
+
+.panel {
+    margin-top: 10px;
+}
