@@ -13,10 +13,11 @@ A full-stack web application that simulates the classic AI **Wumpus World** prob
 
 ## Features
 - **Dynamic Grid Setup**: Start the game with customizable grid dimensions (rows and columns).
-- **Backend-Driven Logic**: The game state, including the locations of the Wumpus, pits, and the agent, is securely managed on the server.
+- **Backend-Driven Logic**: The game state, including the locations of the Wumpus, pits, gold, and the agent, is securely managed on the server.
 - **Percepts Simulation**: Generates environmental percepts dynamically based on adjacent hazards (e.g., *Stench* for the Wumpus, *Breeze* for Pits).
 - **Basic Inference Engine**: Performs safety checks on the backend before allowing the agent to move, keeping track of the logical inference steps.
-- **Interactive UI**: A clean, responsive React interface that visualizes the grid, the agent's current position, active percepts, and the number of inference steps taken.
+- **Goal Checking**: Automatically detects if the agent has reached the gold, triggering a win condition.
+- **Interactive UI**: A clean, responsive React interface that visualizes the grid, the agent's current position, active percepts, the gold location, and the number of inference steps taken.
 
 ## Technologies Used
 - **Frontend**: React.js, HTML5, CSS3
@@ -78,16 +79,16 @@ npm start
 
 The backend exposes the following RESTful endpoints:
 
-- **`POST /init`**: Initializes a new game grid with randomized hazards.
+- **`POST /init`**: Initializes a new game grid with randomized hazards and gold.
   - **Body**: `{ "rows": 4, "cols": 4 }`
   - **Response**: `{ "ok": true }`
 
-- **`GET /state`**: Retrieves the current state of the agent.
-  - **Response**: `{ "agent": { "x": 0, "y": 0 }, "percepts": ["Breeze"], "inferenceSteps": 1 }`
+- **`GET /state`**: Retrieves the current state of the agent and environment.
+  - **Response**: `{ "agent": { "x": 0, "y": 0 }, "percepts": ["Breeze"], "inferenceSteps": 1, "gold": { "x": 2, "y": 3 } }`
 
 - **`POST /move`**: Attempts to move the agent to a specified coordinate. The move is only executed if the target tile is deemed safe by the backend inference logic.
   - **Body**: `{ "x": 1, "y": 0 }`
-  - **Response**: Returns the updated state (agent position, percepts, inference steps).
+  - **Response**: Returns the updated state (agent position, percepts, inference steps, gold, and optional success message).
 
 ## How to Play
 1. Launch both the backend and frontend servers as described in the setup instructions.
@@ -95,9 +96,10 @@ The backend exposes the following RESTful endpoints:
 3. Click **Start** to initialize the game.
 4. Click on an adjacent cell in the grid to move the agent (represented by `A`).
 5. Observe the **Percepts** (Breeze, Stench) at the bottom to deduce the locations of pits or the Wumpus. The backend logic will prevent you from moving into dangerous cells.
+6. Find the cell containing the Gold (`G`) to achieve the goal!
 
 ## Future Improvements
 - **Advanced AI Agent**: Implement automated AI algorithms (like Propositional Logic or First-Order Logic solvers) to allow the agent to navigate and solve the grid autonomously.
 - **Visual Enhancements**: Add rich graphics, icons, or images for the Wumpus, Pits, Gold, and the Agent.
-- **Gold and Scoring**: Introduce the Gold element, scoring mechanisms, and arrows to shoot the Wumpus.
+- **Scoring System & Actions**: Introduce scoring mechanisms, and allow the agent to pick up the gold or shoot arrows at the Wumpus.
 - **Fog of War**: Hide unvisited cells to make the exploration experience more authentic.

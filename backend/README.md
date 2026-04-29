@@ -1,70 +1,30 @@
-# Getting Started with Create React App
+# Wumpus Agent Backend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This directory contains the Express.js server that acts as the backend for the Wumpus Agent application. It manages the game state, validates moves, and provides percepts to the frontend.
+
+## Features
+- **Game State Management**: Keeps track of the agent's position, pits, Wumpus, and gold.
+- **Percept Generation**: Returns percepts (Breeze, Stench) based on the agent's surroundings.
+- **Safety Checks**: Basic inference logic validates whether a cell is safe before allowing the agent to move.
+
+## API Endpoints
+
+- `POST /init`: Initializes a new grid with specified rows and columns.
+  - Body: `{ "rows": <number>, "cols": <number> }`
+- `GET /state`: Retrieves the current state of the game.
+  - Returns: `{ "agent": {"x": 0, "y": 0}, "percepts": [], "inferenceSteps": 0, "gold": {"x": 0, "y": 0} }`
+- `POST /move`: Attempts to move the agent to a target coordinate. The move is executed only if it is safe.
+  - Body: `{ "x": <number>, "y": <number> }`
+  - Returns the updated game state and an optional message (e.g., if gold is found).
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+### `node server.js`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Starts the backend server. The server runs on `http://localhost:3000` by default.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Dependencies
+- `express`: Web framework for handling HTTP requests.
+- `cors`: Middleware to enable Cross-Origin Resource Sharing.

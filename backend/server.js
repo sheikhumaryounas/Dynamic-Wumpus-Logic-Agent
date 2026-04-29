@@ -9,6 +9,7 @@ let rows = 4, cols = 4;
 let agent = { x: 0, y: 0 };
 let pits = [];
 let wumpus = {};
+let gold = {};
 let inferenceSteps = 0;
 
 // Initialize grid
@@ -18,11 +19,19 @@ function initGrid(r, c) {
     agent = { x: 0, y: 0 };
     inferenceSteps = 0;
 
+    // Wumpus
     wumpus = {
         x: Math.floor(Math.random() * r),
         y: Math.floor(Math.random() * c)
     };
 
+    // Gold
+    gold = {
+        x: Math.floor(Math.random() * r),
+        y: Math.floor(Math.random() * c)
+    };
+
+    // Pits
     pits = [];
     for (let i = 0; i < 2; i++) {
         pits.push({
@@ -45,7 +54,7 @@ function getPercepts(x, y) {
     return percepts;
 }
 
-// Inference (basic safety check)
+// Basic safety check
 function isSafe(x, y) {
     inferenceSteps++;
     if (pits.some(p => p.x === x && p.y === y)) return false;
@@ -53,6 +62,7 @@ function isSafe(x, y) {
     return true;
 }
 
+// APIs
 app.post("/init", (req, res) => {
     initGrid(req.body.rows, req.body.cols);
     res.json({ ok: true });
@@ -62,24 +72,34 @@ app.get("/state", (req, res) => {
     res.json({
         agent,
         percepts: getPercepts(agent.x, agent.y),
-        inferenceSteps
+        inferenceSteps,
+        gold
     });
 });
 
 app.post("/move", (req, res) => {
     const { x, y } = req.body;
+    let message = "";
 
     if (x >= 0 && x < rows && y >= 0 && y < cols) {
         if (isSafe(x, y)) {
             agent = { x, y };
+
+            if (agent.x === gold.x && agent.y === gold.y) {
+                message = "🎉 Gold Found! Goal Achieved!";
+            }
         }
     }
 
     res.json({
         agent,
         percepts: getPercepts(agent.x, agent.y),
-        inferenceSteps
+        inferenceSteps,
+        gold,
+        message
     });
 });
 
-app.listen(3000, () => console.log("Backend running on http://localhost:3000"));
+app.listen(3000, () =>
+    console.log("Backend running on http://localhost:3000")
+);

@@ -5,8 +5,8 @@
 .grid {
     display: grid;
     gap: 5px;
-    margin: 20px auto;
-    width: fit-content;
+    justify-content: center;
+    margin-top: 20px;
 }
 
 .cell {
@@ -24,6 +24,23 @@
     color: white;
 }
 
+.breeze {
+    background: lightblue;
+}
+
+.stench {
+    background: violet;
+}
+
+.both {
+    background: brown;
+    color: white;
+}
+
+.gold {
+    background: gold;
+}
+
 .panel {
-    margin-top: 10px;
+    margin-top: 15px;
 }

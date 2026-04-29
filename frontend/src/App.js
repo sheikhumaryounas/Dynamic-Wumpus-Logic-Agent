@@ -8,46 +8,80 @@ function App() {
   const [agent, setAgent] = useState({ x: 0, y: 0 });
   const [percepts, setPercepts] = useState([]);
   const [steps, setSteps] = useState(0);
+  const [gold, setGold] = useState({});
+  const [message, setMessage] = useState("");
 
   const init = async () => {
     await fetch("http://localhost:3000/init", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rows: Number(rows), cols: Number(cols) })
+      body: JSON.stringify({
+        rows: Number(rows),
+        cols: Number(cols)
+      })
     });
+
     updateState();
+    setMessage("");
   };
 
   const updateState = async () => {
     const res = await fetch("http://localhost:3000/state");
     const data = await res.json();
+
     setAgent(data.agent);
     setPercepts(data.percepts);
     setSteps(data.inferenceSteps);
+    setGold(data.gold);
   };
 
   const move = async (x, y) => {
-    await fetch("http://localhost:3000/move", {
+    const res = await fetch("http://localhost:3000/move", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ x, y })
     });
-    updateState();
+
+    const data = await res.json();
+
+    setAgent(data.agent);
+    setPercepts(data.percepts);
+    setSteps(data.inferenceSteps);
+    setGold(data.gold);
+    setMessage(data.message || "");
   };
 
   return (
     <div className="container">
       <h2>Wumpus World Agent</h2>
 
-      <input value={rows} onChange={e => setRows(e.target.value)} />
-      <input value={cols} onChange={e => setCols(e.target.value)} />
-      <button onClick={init}>Start</button>
+      <div>
+        <input
+          type="number"
+          value={rows}
+          onChange={(e) => setRows(Number(e.target.value))}
+        />
+        <input
+          type="number"
+          value={cols}
+          onChange={(e) => setCols(Number(e.target.value))}
+        />
+        <button onClick={init}>Start</button>
+      </div>
 
-      <Grid rows={rows} cols={cols} agent={agent} move={move} />
+      <Grid
+        rows={Number(rows)}
+        cols={Number(cols)}
+        agent={agent}
+        move={move}
+        gold={gold}
+        percepts={percepts}
+      />
 
       <div className="panel">
-        <p>Percepts: {percepts.join(", ")}</p>
+        <p>Percepts: {percepts.join(", ") || "None"}</p>
         <p>Inference Steps: {steps}</p>
+        <p>{message}</p>
       </div>
     </div>
   );
