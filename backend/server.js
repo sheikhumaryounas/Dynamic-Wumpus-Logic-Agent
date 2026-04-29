@@ -86,7 +86,7 @@ app.post("/move", (req, res) => {
             agent = { x, y };
 
             if (agent.x === gold.x && agent.y === gold.y) {
-                message = "🎉 Gold Found! Goal Achieved!";
+                message = "Gold Found! Goal Achieved!";
             }
         }
     }
